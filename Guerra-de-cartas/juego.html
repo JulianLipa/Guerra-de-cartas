@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guerra de cartas</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" href="naipes/trebol-icon.png">
+</head>
+
+<body>
+
+    <section id="mesa">
+        <div id="container">
+            <div class="cartas">
+                <h2>Tus Cartas</h2>
+                <h3 id="cant-usuario"></h2>
+                <img src="naipes/dorso.jpeg" alt="" class="carta" id="carta-usuario">
+            </div>
+        
+            <div class="cartas">
+                <h2>Cartas Maquina</h2>
+                <h3 id="cant-maquina"></h3>
+                <img src="naipes/dorso.jpeg" alt="" class="carta" id="carta-maquina">
+            </div>
+        </div>
+    
+        <button id="boton-voltear" onclick="voltearCarta()">Voltear</button>
+        <button id="boton-voltear" onclick="reiniciar()">Dar de nuevo</button>
+        <a class="btn" href="formulario.html">Volver a inicio</a>
+    </section>
+    
+    <script>
+        var cartaUsuario = 25;
+        var cartaMaquina = 25;
+
+        var cantidad = 1;
+        var cantidad_usr = 1;
+        var cantidad_maq = 1;
+
+        var numUsuario = 0;
+        var numMaquina = 0;
+
+        var paloUsuario = 0;
+        var paloMaquina = 0;
+
+        var corazon = [];
+        var pica = [];
+        var trebol = [];
+        var diamante = [];
+
+        var cartas_cant = 2;
+
+        for(i=0;i<=13;i++){
+            corazon[i] = i;
+            pica[i] = i;
+            trebol[i] = i;
+            diamante[i] = i;
+        }
+
+        console.log("corazon "+corazon);
+        console.log("pica "+pica);
+        console.log("trebol "+trebol);
+        console.log("diamante "+diamante);
+
+        var mazoUsuarioPalo = [];
+        var mazoUsuarioNum = [];
+
+        var mazoMaquinaPalo = [];
+        var mazoMaquinaNum = [];
+
+        var mazoMaquina = 1;
+
+        var inicio = 0;
+
+        for(i=1; i<=cartas_cant;i++){
+            mazoUsuarioPalo[i] = 0;
+            mazoUsuarioNum[i] = 0;
+
+            mazoMaquinaPalo[i] = 0;
+            mazoMaquinaNum[i] = 0;
+        }
+
+        document.getElementById("cant-usuario").innerHTML = cartas_cant;
+        document.getElementById("cant-maquina").innerHTML = cartas_cant;
+
+        repartirUsuario();
+
+        function voltearCarta(){
+
+            if(cantidad_usr > mazoUsuarioNum.length-1){
+                cantidad_usr = 1;
+                document.getElementById("carta-usuario").setAttribute("src","naipes/"+mazoUsuarioPalo[cantidad_usr]+"/"+mazoUsuarioNum[cantidad_usr]+".png");
+            }else{
+                document.getElementById("carta-usuario").setAttribute("src","naipes/"+mazoUsuarioPalo[cantidad_usr]+"/"+mazoUsuarioNum[cantidad_usr]+".png");
+            }
+
+            if(cantidad_maq > mazoMaquinaNum.length-1){
+                cantidad_maq = 1;
+                document.getElementById("carta-maquina").setAttribute("src","naipes/"+mazoMaquinaPalo[cantidad_maq]+"/"+mazoMaquinaNum[cantidad_maq]+".png");
+            }else{
+                document.getElementById("carta-maquina").setAttribute("src","naipes/"+mazoMaquinaPalo[cantidad_maq]+"/"+mazoMaquinaNum[cantidad_maq]+".png");
+            }
+
+            if(mazoUsuarioNum[cantidad_usr] > mazoMaquinaNum[cantidad_maq]){
+                document.getElementById("carta-usuario").classList.add('ganador');
+                document.getElementById("carta-usuario").classList.remove('perdedor');
+
+                document.getElementById("carta-maquina").classList.add('perdedor');
+                document.getElementById("carta-maquina").classList.remove('ganador');
+
+                mazoUsuarioNum[mazoUsuarioNum.length] = mazoMaquinaNum[cantidad_maq];
+                mazoUsuarioPalo[mazoUsuarioPalo.length] = mazoMaquinaPalo[cantidad_maq];
+
+                mazoMaquinaNum.splice(cantidad_maq,1);
+                mazoMaquinaPalo.splice(cantidad_maq,1);
+
+                for(i=0; i<=mazoUsuarioNum.length-1;i++){
+                    console.log("USERcarta "+i);
+                    console.log(mazoUsuarioPalo[i]);
+                    console.log(mazoUsuarioNum[i]);
+
+                    console.log("carta "+i);
+                    console.log(mazoMaquinaPalo[i]);
+                    console.log(mazoMaquinaNum[i]);
+                }
+            }
+            
+            if(mazoUsuarioNum[cantidad_usr] < mazoMaquinaNum[cantidad_maq]){
+                document.getElementById("carta-maquina").classList.add('ganador');
+                document.getElementById("carta-maquina").classList.remove('perdedor');
+
+                document.getElementById("carta-usuario").classList.add('perdedor');
+                document.getElementById("carta-usuario").classList.remove('ganador');
+
+                mazoMaquinaNum[mazoMaquinaNum.length] = mazoUsuarioNum[cantidad_usr];
+                mazoMaquinaPalo[mazoMaquinaPalo.length] = mazoUsuarioPalo[cantidad_usr];
+
+                mazoUsuarioNum.splice(cantidad_usr,1);
+                mazoUsuarioPalo.splice(cantidad_usr,1);
+
+                for(i=0; i<=mazoMaquinaNum.length-1;i++){
+                    console.log("USERcarta "+i);
+                    console.log(mazoUsuarioPalo[i]);
+                    console.log(mazoUsuarioNum[i]);
+
+                    console.log("carta "+i);
+                    console.log(mazoMaquinaPalo[i]);
+                    console.log(mazoMaquinaNum[i]);
+                }
+            }
+
+            console.log("cant usr "+parseInt(mazoUsuarioNum.length-1));
+            document.getElementById("cant-usuario").innerHTML = parseInt(mazoUsuarioNum.length-1);
+
+            console.log("cant maq "+mazoMaquinaNum.length-1);
+            document.getElementById("cant-maquina").innerHTML = mazoMaquinaNum.length-1;
+
+            if(mazoUsuarioNum.length-1 < 1){
+                alert("Perdiste :(");
+                reiniciar();
+            }
+            
+            if(mazoMaquinaNum.length-1 < 1){
+                alert("Ganaste!!");
+                reiniciar();
+            }
+
+            cantidad_usr++;
+            cantidad_maq++;
+        }
+
+        function reiniciar(){
+            window.location.reload();
+        }
+        
+        function repartirUsuario(){
+                
+            for(i=1; i<=cartas_cant;i++){
+                paloUsuario = parseInt(Math.floor(Math.random() * 4) + 1);
+                numUsuario = Math.floor(Math.random() * 13) + 1;
+
+                if(paloUsuario == 1){
+                    corazon[numUsuario] = 99;
+
+                    mazoUsuarioPalo[cantidad] = 1;
+                    mazoUsuarioNum[cantidad] = numUsuario;
+
+                    cantidad++;
+                }
+
+                if(paloUsuario == 2){
+                    diamante[numUsuario] = 99;
+
+                    mazoUsuarioPalo[cantidad] = 2;
+                    mazoUsuarioNum[cantidad] = numUsuario;
+
+                    cantidad++;
+                }
+
+                if(paloUsuario == 3){
+                    pica[numUsuario] = 99;
+
+                    mazoUsuarioPalo[cantidad] = 3;
+                    mazoUsuarioNum[cantidad] = numUsuario;
+
+                    cantidad++;
+                }
+
+                if(paloUsuario == 4){
+                    trebol[numUsuario] = 99;
+
+                    mazoUsuarioPalo[cantidad] = 4;
+                    mazoUsuarioNum[cantidad] = numUsuario;
+
+                    cantidad++;
+                }
+            }
+            for(i=1; i<=cartas_cant;i++){
+                console.log("USERcarta "+i);
+                console.log(mazoUsuarioPalo[i]);
+                console.log(mazoUsuarioNum[i]);
+            }
+
+            console.log("cant "+cantidad);
+            console.log("corazon "+corazon);
+            console.log("pica "+pica);
+            console.log("trebol "+trebol);
+            console.log("diamante "+diamante);
+            repartirMaquina();
+        }
+        
+        function repartirMaquina(){
+
+            for(i=1; i<=13; i++){
+                if(corazon[i] != 99){
+                    mazoMaquinaPalo[mazoMaquina] = 1;
+                    mazoMaquinaNum[mazoMaquina] = i;
+                    
+                    corazon[i] = 99;
+                    if(mazoMaquina<cartas_cant){
+                        mazoMaquina++;
+                    }
+                }
+            }
+
+            for(i=1; i<=13; i++){
+                if(diamante[i] != 99){
+                    mazoMaquinaPalo[mazoMaquina] = 2;
+                    mazoMaquinaNum[mazoMaquina] = i;
+
+                    diamante[i] = 99;
+                    if(mazoMaquina<cartas_cant){
+                        mazoMaquina++;
+                    }
+                }
+            }
+
+            for(i=1; i<=13; i++){
+                if(pica[i] != 99){
+                    mazoMaquinaPalo[mazoMaquina] = 3;
+                    mazoMaquinaNum[mazoMaquina] = i;
+                    
+                    pica[i] = 99;
+                    if(mazoMaquina<cartas_cant){
+                        mazoMaquina++;
+                    }
+                }
+            }
+
+            for(i=1; i<=13; i++){
+                if(trebol[i] != 99){
+                    mazoMaquinaPalo[mazoMaquina] = 4;
+                    mazoMaquinaNum[mazoMaquina] = i;
+
+                    trebol[i] = 99;
+                    if(mazoMaquina<cartas_cant){
+                        mazoMaquina++;
+                    }
+                }
+            }
+
+            for(i=1; i<=cartas_cant; i++){
+                console.log("carta "+i);
+                console.log(mazoMaquinaPalo[i]);
+                console.log(mazoMaquinaNum[i]);
+            }
+
+            console.log("mazo "+mazoMaquina);
+            console.log("corazon "+corazon);
+            console.log("pica "+pica);
+            console.log("trebol "+trebol);
+            console.log("diamante "+diamante);
+        }
+
+    </script>
+
+
+
+</body>
+
+
+</html>
